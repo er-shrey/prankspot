@@ -1,0 +1,127 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "46007fb96e084dc6db2e12c4f4a2445a",
+    "entities": [
+      {
+        "tableName": "favorite_ssid",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ssid` TEXT NOT NULL, `categoryId` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`ssid`))",
+        "fields": [
+          {
+            "fieldPath": "ssid",
+            "columnName": "ssid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ssid"
+          ]
+        }
+      },
+      {
+        "tableName": "favorite_prank",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`prankId` TEXT NOT NULL, `createdAt` INTEGER NOT NULL, PRIMARY KEY(`prankId`))",
+        "fields": [
+          {
+            "fieldPath": "prankId",
+            "columnName": "prankId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "prankId"
+          ]
+        }
+      },
+      {
+        "tableName": "session_history",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mode` TEXT NOT NULL, `ssid` TEXT NOT NULL, `categoryId` TEXT NOT NULL, `prankId` TEXT NOT NULL, `startedAt` INTEGER NOT NULL, `endedAt` INTEGER NOT NULL, `visitorCount` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mode",
+            "columnName": "mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ssid",
+            "columnName": "ssid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryId",
+            "columnName": "categoryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prankId",
+            "columnName": "prankId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAt",
+            "columnName": "startedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endedAt",
+            "columnName": "endedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "visitorCount",
+            "columnName": "visitorCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '46007fb96e084dc6db2e12c4f4a2445a')"
+    ]
+  }
+}

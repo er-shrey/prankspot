@@ -1,0 +1,259 @@
+{
+  "categories": [
+    {
+      "id": "aeroplane", "name": "Aeroplane", "emoji": "✈️", "description": "Cleared for prank-off",
+      "ssids": ["Flight 404", "First Class Lounge", "WiFi Boarding Gate 9¾", "Turbulence Network", "Airplane Mode OFF", "Last Call for Passengers", "Cabin Crew Only", "Seatbelt Sign Is ON", "Lost Luggage Hotspot", "Overhead Bin WiFi", "Cockpit Free WiFi", "Delayed Indefinitely", "Window Seat Premium", "Tray Table Upright", "Gate Changed Again", "Peanuts Not Included", "Jet Lag Junction", "Mile High Hotspot", "Duty Free Signal", "Emergency Exit Row", "Pilot Is Napping"],
+      "pranks": [
+        {
+          "id": "aeroplane_001", "name": "Flight 404", "emoji": "✈️",
+          "title": "Welcome aboard Flight 404!",
+          "message": "Your internet connection has been delayed due to unexpected turbulence.",
+          "extras": ["Your complimentary in-flight Wi-Fi has been replaced with imaginary Wi-Fi.", "Please keep your browser in the upright position.", "Snacks will be served in approximately never minutes."],
+          "button": "Request landing", "reveal": "Relax, it's just a prank! Enjoy your flight.",
+          "bg": ["#0D47A1", "#4FC3F7"], "text": "#FFFFFF", "accent": "#FFD54F",
+          "animation": "loading", "sound": "chime"
+        }
+      ]
+    },
+    {
+      "id": "birthday", "name": "Birthday Party", "emoji": "🎂", "description": "Cake, chaos, confetti",
+      "ssids": ["Cake Is A Lie", "Birthday Tax Collector", "Gift Loading 99%", "Who Ate My Cake?", "Birthday VIP Lounge", "Candle Count Classified", "Blow The Candles WiFi", "Party Pooper Network", "Present Detector 3000", "Balloon Pop Zone", "Free Cake Upstairs", "Sing Loudly To Connect", "Another Year Older WiFi", "Gift Card Not Found", "Frosting Fiber Optic", "Confetti Cannon Armed", "No Gift No WiFi", "Birthday Boss Mode", "Slice Of Internet", "Party Hat Required"],
+      "pranks": [
+        {
+          "id": "birthday_001", "name": "Cake Sponsor", "emoji": "🎂",
+          "title": "Congratulations!",
+          "message": "You have been selected as the official cake sponsor.",
+          "extras": ["Your payment of 10 imaginary chocolates is pending.", "Please hum 'Happy Birthday' to continue.", "Extra frosting has been charged to your imagination."],
+          "button": "Accept sponsorship", "reveal": "Gotcha! It's just a prank. Happy Birthday!",
+          "bg": ["#EC407A", "#FFB74D"], "text": "#FFFFFF", "accent": "#FFF59D",
+          "animation": "confetti", "sound": "party"
+        }
+      ]
+    },
+    {
+      "id": "carnival", "name": "Carnival", "emoji": "🎪", "description": "Step right up",
+      "ssids": ["Haunted WiFi Carnival", "Ferris Wheel Of Lag", "Clown Car Network", "Cotton Candy Cloud", "Ring Toss Router", "Funhouse Mirror WiFi", "Bumper Car Bandwidth", "Popcorn Packet Loss", "Fortune Teller Says No", "Strongman Signal", "Tilt A Whirl Hotspot", "Lost At The Fair", "Juggling Packets", "Big Top Broadband", "Win A Giant Teddy", "Carousel Of Buffering", "Cursed Prize Booth", "Ticket Booth Closed", "Stilt Walker WiFi", "Dunk Tank Data"],
+      "pranks": [
+        {
+          "id": "carnival_001", "name": "Haunted Carnival", "emoji": "🎪",
+          "title": "Welcome to the Haunted Wi-Fi Carnival!",
+          "message": "You have entered the mysterious zone.",
+          "extras": ["Your next connection attempt may summon a clown.", "The fortune teller predicts slow internet.", "Please keep your hands inside the browser at all times."],
+          "button": "Spin the wheel", "reveal": "Ha! It's just a prank. No clowns were summoned.",
+          "bg": ["#6A1B9A", "#E53935"], "text": "#FFFFFF", "accent": "#FFEB3B",
+          "animation": "shake", "sound": "horn"
+        }
+      ]
+    },
+    {
+      "id": "concert", "name": "Concert", "emoji": "🎸", "description": "Rock the router",
+      "ssids": ["VIP Backstage Access", "Front Row Free WiFi", "Encore Network", "Mosh Pit Hotspot", "Sound Check 1 2 1 2", "Roadie Only Network", "Lighter Up Signal", "Crowd Surf Connection", "Drum Solo Delay", "Bass Drop Incoming", "Headliner Is Late", "Ear Plugs Recommended", "Merch Table WiFi", "Lip Sync Network", "Air Guitar Arena", "Unplugged Session", "Tour Bus Hotspot", "Sold Out Signal", "Feedback Loop WiFi", "One More Song"],
+      "pranks": [
+        {
+          "id": "concert_001", "name": "Backstage Pass", "emoji": "🎸",
+          "title": "VIP BACKSTAGE ACCESS",
+          "message": "Congratulations! You have been selected for an exclusive backstage experience.",
+          "extras": ["Unfortunately, the artist is currently unavailable.", "Your pass is valid for zero (0) songs.", "Please wait while we tune the imaginary guitar."],
+          "button": "Claim my pass", "reveal": "Rock on — it's just a prank!",
+          "bg": ["#000000", "#7B1FA2"], "text": "#FFFFFF", "accent": "#00E5FF",
+          "animation": "ticket", "sound": "drum"
+        }
+      ]
+    },
+    {
+      "id": "wedding", "name": "Wedding", "emoji": "💍", "description": "Love at first connect",
+      "ssids": ["Just Married Network", "Bride Approved WiFi", "Groom Is Hiding Here", "Open Bar Bandwidth", "Speech Is Too Long", "Dance Floor Data", "Bouquet Catch Zone", "Seating Chart Chaos", "Cake Cutting Ceremony", "Uncle Dance Moves", "Happily Ever Hotspot", "Ring Bearer Router", "Plus One Not Invited", "Vow Renewal Network", "Free Buffet Signal", "Something Borrowed WiFi", "Photo Booth Fiber", "Honeymoon Packets", "Til Death Do Us Lag", "Toast To The Router"],
+      "pranks": [
+        {
+          "id": "wedding_001", "name": "Seating Surprise", "emoji": "💍",
+          "title": "You've been seated!",
+          "message": "Your table assignment: right next to the speakers, behind the cake.",
+          "extras": ["You have also been volunteered to give a 20-minute speech.", "Dress code update: matching outfits with the uncle.", "First dance partner assigned: the photographer."],
+          "button": "Find my table", "reveal": "Relax — it's just a prank. Enjoy the party!",
+          "bg": ["#F8BBD0", "#FFFFFF"], "text": "#4A148C", "accent": "#C2185B",
+          "animation": "float", "sound": "chime"
+        }
+      ]
+    },
+    {
+      "id": "gaming", "name": "Gaming", "emoji": "🎮", "description": "Lag is a lifestyle",
+      "ssids": ["Lag Spike Arena", "Press Start To Connect", "Respawn Point WiFi", "Noob Lobby Network", "High Ping Hotspot", "Achievement Unlocked", "Side Quest Signal", "Final Boss WiFi", "Save Point Network", "AFK Zone", "Loot Box Router", "Rage Quit Network", "Game Over Connection", "Player 2 Has Joined", "Speedrun Signal", "Cheat Code Required", "Low Health Hotspot", "Extra Life WiFi", "Respawn In 5 Seconds", "Pixelated Packets"],
+      "pranks": [
+        {
+          "id": "gaming_001", "name": "Game Over", "emoji": "🎮",
+          "title": "GAME OVER",
+          "message": "You were eliminated by an invisible Wi-Fi boss.",
+          "extras": ["Respawning in 10 seconds… or maybe 10 minutes.", "Your ping has been upgraded to 9,999 ms.", "Achievement unlocked: Connected To A Prank."],
+          "button": "Insert coin", "reveal": "Continue? It's just a prank — you win!",
+          "bg": ["#1B1B2F", "#16213E"], "text": "#39FF14", "accent": "#FF2E63",
+          "animation": "countdown", "sound": "arcade"
+        }
+      ]
+    },
+    {
+      "id": "police", "name": "Police / FBI", "emoji": "🕵️", "description": "Totally official",
+      "ssids": ["FBI Surveillance Van", "Evidence Collection Net", "Police Monitoring Unit", "Suspect Network", "Interrogation Room WiFi", "Undercover Donut Van", "Witness Protection WiFi", "Case File 404", "Stakeout Snack Network", "Detective Wifi Holmes", "Fingerprint Scanner 2", "Not A Police Van", "Secret Agent Hotspot", "Mission Impossible WiFi", "Totally Not The FBI", "Lie Detector Network", "Agent Smith Signal", "Classified Connection", "Most Wanted WiFi", "Crime Scene Do Not Join"],
+      "pranks": [
+        {
+          "id": "police_001", "name": "Classified", "emoji": "🕵️",
+          "title": "YOU HAVE BEEN DETECTED!",
+          "message": "Your device has successfully connected to a classified network.",
+          "extras": ["Your browsing privileges are under investigation.", "Agent Snacks has been dispatched to your location.", "Please remain calm and keep scrolling."],
+          "button": "Surrender", "reveal": "Relax. It's just a prank! Nothing was scanned or recorded.",
+          "bg": ["#0A0A0A", "#B71C1C"], "text": "#FFFFFF", "accent": "#FF5252",
+          "animation": "siren", "sound": "siren"
+        }
+      ]
+    },
+    {
+      "id": "hacker", "name": "Hacker", "emoji": "💻", "description": "Green text, zero hacking",
+      "ssids": ["Mainframe Access", "Hack The Planet", "Firewall Is Down", "Matrix Glitch Network", "sudo make me a sandwich", "Root Access Granted", "Hacker Man WiFi", "Encrypted Pizza", "Download More RAM", "Password Is Password", "Bit Flip Network", "Packet Sniffing Dog", "Kernel Panic Hotspot", "404 Network Not Found", "Ctrl Alt Delight", "Binary Breakfast", "Black Hat Cafe", "Zero Day Snacks", "Terminal Velocity", "Script Kiddie Zone"],
+      "pranks": [
+        {
+          "id": "hacker_001", "name": "Matrix", "emoji": "💻",
+          "title": "ACCESS GRANTED",
+          "message": "Downloading the entire internet to your device…",
+          "extras": ["Installing 64 GB of extra RAM (imaginary).", "Bypassing the mainframe with a banana.", "Compiling cat videos at 1 TB per second."],
+          "button": "Hack faster", "reveal": "Just kidding — nothing was hacked. It's a prank!",
+          "bg": ["#000000", "#002B00"], "text": "#00FF41", "accent": "#00FF41",
+          "animation": "matrix", "sound": "beep"
+        }
+      ]
+    },
+    {
+      "id": "school", "name": "School", "emoji": "🏫", "description": "Detention for lag",
+      "ssids": ["Principal's Office", "Detention Network", "Homework Due Tomorrow", "Pop Quiz Hotspot", "Teacher Can See You", "Cafeteria Mystery Meat", "Hall Pass Required", "Library Shhh Network", "Recess Is Cancelled", "Chalkboard Screech", "Field Trip WiFi", "Summer Break Forever", "Show Your Work", "Copying Is Cheating", "Gym Class Hero", "Lunch Money Network", "Science Fair Volcano", "Bell Rings At 3", "Report Card Signal", "Spelling Bee WiFee"],
+      "pranks": [
+        {
+          "id": "school_001", "name": "Surprise Quiz", "emoji": "🏫",
+          "title": "SURPRISE QUIZ!",
+          "message": "Before using this Wi-Fi, please answer 50 algebra questions.",
+          "extras": ["You have 3 seconds. Begin.", "Your homework has been doubled for connecting.", "Please report to the principal's office (it's a snack bar)."],
+          "button": "Hand in my test", "reveal": "Grade: A+ for falling for it. It's just a prank!",
+          "bg": ["#2E7D32", "#81C784"], "text": "#FFFFFF", "accent": "#FFF176",
+          "animation": "countdown", "sound": "bell"
+        }
+      ]
+    },
+    {
+      "id": "office", "name": "Office", "emoji": "🏢", "description": "Synergy, but funnier",
+      "ssids": ["Meeting That Could Be Email", "Printer Is Jammed Again", "Reply All Network", "Boss Is Watching", "Coffee Machine WiFi", "Monday Morning Hotspot", "Synergy Network", "Out Of Office", "Circle Back Later", "Per My Last Email", "Free Donuts Kitchen", "Deadline Was Yesterday", "Casual Friday WiFi", "Team Building Required", "Spreadsheet Of Doom", "Mute Your Mic", "Quarterly Lag Report", "Cubicle 404", "Overtime Network", "Pivot To WiFi"],
+      "pranks": [
+        {
+          "id": "office_001", "name": "Mandatory Meeting", "emoji": "🏢",
+          "title": "Mandatory Meeting Invite",
+          "message": "You have been added to a 4-hour meeting about scheduling more meetings.",
+          "extras": ["Agenda: TBD. Snacks: also TBD.", "Your camera will be on for the entire time.", "Please prepare 40 slides by lunch."],
+          "button": "Accept invite", "reveal": "Declined! It's just a prank. Back to work.",
+          "bg": ["#37474F", "#90A4AE"], "text": "#FFFFFF", "accent": "#FFCA28",
+          "animation": "loading", "sound": "chime"
+        }
+      ]
+    },
+    {
+      "id": "hospital", "name": "Hospital", "emoji": "🏥", "description": "Doctor's orders: laugh",
+      "ssids": ["Dr Wifi Will See You", "Waiting Room Forever", "Take Two Packets", "Laughing Gas Network", "Bedside Manner WiFi", "Vitals Are Stable", "Nurse Station Signal", "Sneeze Guard Network", "Prescription Bandwidth", "Diagnosis: Lag", "Get Well Soon WiFi", "X-Ray Vision Network", "Healthy Signal Only", "Germ Free Hotspot", "Second Opinion WiFi", "Band Aid Network", "Chill Pill Router", "Ward 404", "Stethoscope Signal", "Hiccup Cure Network"],
+      "pranks": [
+        {
+          "id": "hospital_001", "name": "Diagnosis", "emoji": "🏥",
+          "title": "Your diagnosis is ready",
+          "message": "You are suffering from severe Wi-Fi addiction.",
+          "extras": ["Prescription: go outside for 10 minutes.", "Side effects may include touching grass.", "The doctor recommends two memes and some rest."],
+          "button": "Get treatment", "reveal": "Fully recovered — it was just a prank!",
+          "bg": ["#E0F7FA", "#80DEEA"], "text": "#004D40", "accent": "#00897B",
+          "animation": "loading", "sound": "beep"
+        }
+      ]
+    },
+    {
+      "id": "restaurant", "name": "Restaurant", "emoji": "🍕", "description": "Served with extra cheese",
+      "ssids": ["Free Breadsticks WiFi", "Chef's Secret Network", "Table For One Router", "Extra Cheese Please", "Kitchen Is Closed", "Your Order Is Burning", "Pizza Delivery Van", "Spaghetti Code WiFi", "Tip Your Router", "Soup Of The Day", "Gluten Free Signal", "Spicy Level 10", "Dessert Menu Network", "Waiter Will Be Back", "Bottomless Bandwidth", "Cash Only Hotspot", "Food Coma Zone", "Michelin Star WiFi", "Napkin Network", "Doggy Bag Data"],
+      "pranks": [
+        {
+          "id": "restaurant_001", "name": "Your Bill", "emoji": "🍕",
+          "title": "Your bill has arrived",
+          "message": "Total: 47 pizzas and 1 extra-large invisible milkshake.",
+          "extras": ["Payment accepted in compliments only.", "The chef has added a dance performance to your order.", "Tip: please wave at the kitchen."],
+          "button": "Pay with a compliment", "reveal": "On the house — it's just a prank!",
+          "bg": ["#FF7043", "#FFCC80"], "text": "#3E2723", "accent": "#D84315",
+          "animation": "ticket", "sound": "chime"
+        }
+      ]
+    },
+    {
+      "id": "hotel", "name": "Hotel", "emoji": "🏨", "description": "Five-star buffering",
+      "ssids": ["Penthouse Suite WiFi", "Do Not Disturb", "Room Service Network", "Minibar Is Watching", "Late Checkout Lounge", "Lobby Free WiFi", "Bellboy Hotspot", "Ocean View (Parking)", "Towel Animal Network", "Concierge Says Hello", "Elevator Music WiFi", "Continental Breakfast", "Wake Up Call Network", "Housekeeping Knocking", "Pool Closed Forever", "Five Star Lag", "Key Card Not Working", "Presidential Suite", "Turn Down Service", "Spa Day Signal"],
+      "pranks": [
+        {
+          "id": "hotel_001", "name": "Room Upgrade", "emoji": "🏨",
+          "title": "Room upgrade approved!",
+          "message": "You have been upgraded to the Broom Closet Deluxe Suite.",
+          "extras": ["Amenities include one (1) mop and a view of the wall.", "Your minibar bill: 3 imaginary peanuts.", "Housekeeping will knock every 5 minutes."],
+          "button": "Check in", "reveal": "Checked out of the prank — enjoy your stay!",
+          "bg": ["#5D4037", "#D7CCC8"], "text": "#FFFFFF", "accent": "#FFD180",
+          "animation": "ticket", "sound": "bell"
+        }
+      ]
+    },
+    {
+      "id": "christmas", "name": "Christmas", "emoji": "🎄", "description": "Ho ho hotspot",
+      "ssids": ["North Pole Network", "Santa's Workshop WiFi", "Naughty List Router", "Elf On The Shelf Cam", "Jingle All The Way", "Reindeer Radar", "Mistletoe Hotspot", "Sleigh Ride Signal", "Ho Ho Hotspot", "Snowflake Fiber", "Cookies For Santa", "Grinch Stole The WiFi", "Chimney Network", "Present Tracker", "Silent Night Signal", "Frosty The Router", "Ugly Sweater WiFi", "Holiday Bandwidth", "Rudolph Red Light", "Gift Wrap Network"],
+      "pranks": [
+        {
+          "id": "christmas_001", "name": "Naughty List", "emoji": "🎄",
+          "title": "Santa has checked his list…",
+          "message": "Your device has been moved to the NAUGHTY list.",
+          "extras": ["Reason: too much screen time.", "Coal delivery scheduled for Christmas Eve.", "Appeal by leaving extra cookies tonight."],
+          "button": "Appeal to Santa", "reveal": "Ho ho ho! It's just a prank — you're on the nice list.",
+          "bg": ["#C62828", "#1B5E20"], "text": "#FFFFFF", "accent": "#FFFFFF",
+          "animation": "snow", "sound": "bells"
+        }
+      ]
+    },
+    {
+      "id": "halloween", "name": "Halloween", "emoji": "🎃", "description": "Spooky signals",
+      "ssids": ["Haunted House WiFi", "Ghost In The Router", "Pumpkin Spice Network", "Zombie Apocalypse", "Witch Please", "Boo Who Network", "Trick Or Treat WiFi", "Vampire Bites Bandwidth", "Graveyard Shift", "Creepy Clown Hotspot", "Candy Corn Connection", "Skeleton Crew WiFi", "Spooky Scary Signal", "Mummy's Network", "Black Cat Crossing", "Frankenrouter", "Full Moon Fiber", "Haunted Hotspot 666", "Bat Cave Signal", "Do Not Look Behind You"],
+      "pranks": [
+        {
+          "id": "halloween_001", "name": "Haunted Device", "emoji": "🎃",
+          "title": "Your device is now haunted",
+          "message": "A friendly ghost has moved into your browser.",
+          "extras": ["It will rearrange your apps at midnight.", "Please leave out candy to keep it happy.", "Don't look behind you… just kidding, look."],
+          "button": "Call ghostbusters", "reveal": "Boo! It's just a prank. Happy Halloween!",
+          "bg": ["#1A1A1A", "#FF6F00"], "text": "#FFFFFF", "accent": "#FFAB00",
+          "animation": "float", "sound": "spooky"
+        }
+      ]
+    },
+    {
+      "id": "alien", "name": "Alien Invasion", "emoji": "👽", "description": "Take me to your router",
+      "ssids": ["Mothership Uplink", "Area 51 Guest WiFi", "UFO Landing Zone", "Take Me To Your Router", "Alien Probe Network", "Crop Circle Signal", "We Come In Peace", "Abduction In Progress", "Little Green WiFi", "Intergalactic Hotspot", "Beam Me Up Network", "Martian Bandwidth", "Not A Weather Balloon", "Tin Foil Hat Required", "Galaxy Far Far Away", "Spaceship Parking", "Cosmic Cable", "E.T. Phone Home", "Planet X Network", "Warp Speed WiFi"],
+      "pranks": [
+        {
+          "id": "alien_001", "name": "Abduction", "emoji": "👽",
+          "title": "Greetings, Earthling",
+          "message": "Your device has been selected for an intergalactic upgrade.",
+          "extras": ["Beaming you up in 3… 2… 1…", "Please do not resist the tractor beam.", "Our scientists want to study your memes."],
+          "button": "Beam me up", "reveal": "We come in peace — it's just a prank!",
+          "bg": ["#0B0033", "#1DE9B6"], "text": "#FFFFFF", "accent": "#76FF03",
+          "animation": "countdown", "sound": "ufo"
+        }
+      ]
+    },
+    {
+      "id": "custom", "name": "Custom", "emoji": "✨", "description": "Write your own",
+      "ssids": ["Not Your WiFi", "Router McRouterface", "Pretty Fly For A WiFi", "Bill Wi The Science Fi", "Abraham Linksys", "The LAN Before Time", "Wu Tang LAN", "Silence Of The LANs", "Hide Yo Kids Hide Yo WiFi", "Get Off My LAN", "Loading…", "Searching…", "Connecting…", "Mom Click Here", "Tell My WiFi Love Her", "It Hurts When IP", "The Promised LAN", "Nacho WiFi", "Drop It Like Its Hotspot", "No More Mr WiFi"],
+      "pranks": [
+        {
+          "id": "custom_001", "name": "Classic Gotcha", "emoji": "✨",
+          "title": "Loading free premium Wi-Fi…",
+          "message": "Please wait while we connect you to the fastest network on Earth.",
+          "extras": ["Almost there…", "Just a few more seconds…", "Calibrating the sarcasm module…"],
+          "button": "Speed it up", "reveal": "Gotcha! It's just a prank. 😄",
+          "bg": ["#6C3BFF", "#FF4FA3"], "text": "#FFFFFF", "accent": "#FFE066",
+          "animation": "loading", "sound": "party"
+        }
+      ]
+    }
+  ]
+}
