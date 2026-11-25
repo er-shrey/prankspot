@@ -15,13 +15,15 @@ object HotspotInterfaces {
     data class Candidate(val name: String, val address: String)
 
     /** [exclude] holds the IPv4 addresses the phone uses as a client; the hotspot's own address is never one. */
-    fun find(exclude: Set<String> = emptySet()): Candidate? = candidates(exclude).firstOrNull()
+    fun find(exclude: Set<String> = emptySet(), wifiDirect: Boolean = false): Candidate? =
+        candidates(exclude, wifiDirect).firstOrNull()
 
-    fun candidates(exclude: Set<String> = emptySet()): List<Candidate> {
+    /** With [wifiDirect], only the Wi-Fi Direct group interface (p2p-…, 192.168.49.1) counts. */
+    fun candidates(exclude: Set<String> = emptySet(), wifiDirect: Boolean = false): List<Candidate> {
         val all = runCatching { NetworkInterface.getNetworkInterfaces()?.toList().orEmpty() }.getOrDefault(emptyList())
         return all.asSequence()
             .filter { runCatching { it.isUp && !it.isLoopback }.getOrDefault(false) }
-            .filterNot { i -> excludedPrefixes.any { i.name.startsWith(it) } }
+            .filter { i -> if (wifiDirect) i.name.startsWith("p2p") else excludedPrefixes.none { i.name.startsWith(it) } }
             .mapNotNull { i ->
                 val v4 = i.inetAddresses.toList().filterIsInstance<Inet4Address>().firstOrNull { it.isSiteLocalAddress }
                 v4?.let { Candidate(i.name, it.hostAddress!!) }

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.map
 enum class ThemeChoice { SYSTEM, LIGHT, DARK }
 
 data class AppSettings(
-    val defaultMode: HotspotMode = HotspotMode.LOCAL_ONLY,
+    val defaultMode: HotspotMode = HotspotMode.WIFI_DIRECT,
     val defaultCategory: String = "birthday",
     val defaultPrankId: String = "",
     val defaultDurationMinutes: Int = 30,

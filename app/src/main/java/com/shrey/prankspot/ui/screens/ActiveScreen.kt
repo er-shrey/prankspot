@@ -166,8 +166,8 @@ private fun Running(
     } else {
         Text("Running for ${formatDuration(now - s.startedAt)}", style = MaterialTheme.typography.bodyMedium)
     }
-    if (info != null && !info.customApplied && !system && cfg.ssid.isNotBlank()) {
-        InfoNote("Android chose this name and password for the hotspot, so your funny name isn't shown on this phone.", "ℹ️")
+    if (cfg.mode == HotspotMode.LOCAL_ONLY) {
+        InfoNote("Quick mode: Android chose this name and password. For your own funny name, use Funny name or Share internet.", "ℹ️")
     }
     if (system) InfoNote("Using your phone's own hotspot. If you set a different name or password there, guests will see that one.", "🌐")
 

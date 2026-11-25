@@ -8,13 +8,14 @@ import kotlin.random.asKotlinRandom
 class SsidGenerator(private val random: Random = Random.Default) {
     private val shown = mutableMapOf<String, MutableSet<String>>()
 
-    fun suggestions(category: Category, count: Int = 6): List<String> {
+    fun suggestions(category: Category, count: Int = 6, fits: (String) -> Boolean = { true }): List<String> {
         val seen = shown.getOrPut(category.id) { mutableSetOf() }
-        var pool = category.ssids.filterNot { it in seen }
+        val all = category.ssids.filter(fits).ifEmpty { category.ssids }
+        var pool = all.filterNot { it in seen }
         if (pool.size < count) {
             // Pool exhausted for this session: start over, but keep the new batch unique.
-            seen.clear()
-            pool = category.ssids
+            seen.removeAll(all.toSet())
+            pool = all
         }
         val picked = pool.shuffled(random).take(count)
         seen += picked
@@ -37,6 +38,32 @@ object SsidRules {
 
     /** Emoji and other non-ASCII names work on most phones but show as gibberish on some. */
     fun hasCompatibilityRisk(ssid: String): Boolean = ssid.any { it.code > 0x7E }
+}
+
+/**
+ * Wi-Fi Direct networks must be named "DIRECT-xy…" (x, y letters or digits). We use
+ * "DIRECT-xy " + the funny name, so guests see e.g. "DIRECT-FB FBI Surveillance Van".
+ */
+object DirectName {
+    const val PREFIX_BYTES = 10 // "DIRECT-xy "
+    const val MAX_NAME_BYTES = SsidRules.MAX_BYTES - PREFIX_BYTES
+
+    fun full(name: String): String = "DIRECT-${tag(name)} $name"
+
+    /** Two letters from the name's first words, so the prefix looks deliberate. */
+    fun tag(name: String): String {
+        val initials = name.split(' ', '-', '_').mapNotNull { w -> w.firstOrNull { it.isLetterOrDigit() && it.code < 0x80 } }
+        val letters = (initials + name.filter { it.isLetterOrDigit() && it.code < 0x80 }.toList()).take(2)
+        return letters.joinToString("").uppercase().padEnd(2, 'X')
+    }
+
+    fun validate(name: String): String? = SsidRules.validate(name) ?: when {
+        name.toByteArray(Charsets.UTF_8).size > MAX_NAME_BYTES ->
+            "Too long for this mode: $MAX_NAME_BYTES bytes max after the DIRECT-xy prefix"
+        else -> null
+    }
+
+    fun fits(name: String) = validate(name) == null
 }
 
 object PasswordRules {

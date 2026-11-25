@@ -7,6 +7,7 @@ import com.shrey.prankspot.data.PrankDatabase
 import com.shrey.prankspot.data.SettingsRepository
 import com.shrey.prankspot.hotspot.LocalOnlyHotspotManager
 import com.shrey.prankspot.hotspot.SystemHotspotManager
+import com.shrey.prankspot.hotspot.WifiDirectHotspotManager
 import com.shrey.prankspot.session.SessionController
 
 /** Manual dependency container: every platform service is built here and passed in. */
@@ -21,6 +22,7 @@ class AppContainer(context: Context) {
         settings = settings,
         localOnly = LocalOnlyHotspotManager(context),
         system = SystemHotspotManager(context),
+        direct = WifiDirectHotspotManager(context),
     )
 }
 

@@ -43,8 +43,11 @@ fun SettingsScreen(vm: AppViewModel, onBack: () -> Unit) {
         ) {
             SectionCard("Default hotspot mode") {
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilterChip(s.defaultMode == HotspotMode.LOCAL_ONLY, { vm.saveSettings { it.copy(defaultMode = HotspotMode.LOCAL_ONLY) } }, { Text("No internet") })
-                    FilterChip(s.defaultMode == HotspotMode.SYSTEM_HOTSPOT, { vm.saveSettings { it.copy(defaultMode = HotspotMode.SYSTEM_HOTSPOT) } }, { Text("Share internet") })
+                    if (vm.directSupported) {
+                        FilterChip(s.defaultMode == HotspotMode.WIFI_DIRECT, { vm.saveSettings { it.copy(defaultMode = HotspotMode.WIFI_DIRECT) } }, { Text("🎭 Funny name") })
+                    }
+                    FilterChip(s.defaultMode == HotspotMode.SYSTEM_HOTSPOT, { vm.saveSettings { it.copy(defaultMode = HotspotMode.SYSTEM_HOTSPOT) } }, { Text("🌐 Share internet") })
+                    FilterChip(s.defaultMode == HotspotMode.LOCAL_ONLY, { vm.saveSettings { it.copy(defaultMode = HotspotMode.LOCAL_ONLY) } }, { Text("⚡ Quick") })
                 }
             }
             SectionCard("Default theme") {
@@ -97,7 +100,7 @@ fun SettingsScreen(vm: AppViewModel, onBack: () -> Unit) {
                 Text("PrankSpot ${BuildConfig.VERSION_NAME}", style = MaterialTheme.typography.bodyMedium)
                 Text(Capabilities.androidLabel, style = MaterialTheme.typography.bodySmall)
                 Text(
-                    if (Capabilities.canCustomizeLocalOnly) "Custom hotspot names: supported" else "Custom hotspot names: use Share internet mode",
+                    if (vm.directSupported) "Funny names: Wi-Fi Direct supported" else "Funny names: use Share internet mode",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }

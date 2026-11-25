@@ -5,7 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.RadioButton
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -65,11 +70,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.shrey.prankspot.domain.DirectName
 import com.shrey.prankspot.domain.HotspotMode
 import com.shrey.prankspot.domain.PasswordRules
 import com.shrey.prankspot.domain.Security
 import com.shrey.prankspot.domain.SsidRules
-import com.shrey.prankspot.hotspot.Capabilities
 import com.shrey.prankspot.ui.AppViewModel
 import com.shrey.prankspot.ui.InfoNote
 import com.shrey.prankspot.ui.SectionCard
@@ -100,12 +105,18 @@ fun ConfigureScreen(
 
     val category = vm.category(cfg.categoryId)
     val prank = vm.selectedPrank()
-    val local = cfg.mode == HotspotMode.LOCAL_ONLY
-    // On a local-only hotspot before Android 16 QPR2 the OS picks the name and password.
-    val nameEditable = !local || Capabilities.canCustomizeLocalOnly
-    val ssidError = if (nameEditable) SsidRules.validate(cfg.ssid) else null
+    val direct = cfg.mode == HotspotMode.WIFI_DIRECT
+    val system = cfg.mode == HotspotMode.SYSTEM_HOTSPOT
+    val quick = cfg.mode == HotspotMode.LOCAL_ONLY
+    // Quick mode: Android picks the name and password, so there's nothing to edit.
+    val nameEditable = !quick
+    val ssidError = when {
+        direct -> DirectName.validate(cfg.ssid)
+        system -> SsidRules.validate(cfg.ssid)
+        else -> null
+    }
     val passError = if (nameEditable) PasswordRules.validate(cfg.password, cfg.security) else null
-    val canStart = ssidError == null && passError == null
+    val canStart = ssidError == null && passError == null && (!direct || vm.directSupported)
 
     val hotspotPermission = if (Build.VERSION.SDK_INT >= 33) Manifest.permission.NEARBY_WIFI_DEVICES else Manifest.permission.ACCESS_FINE_LOCATION
     fun begin() {
@@ -113,7 +124,7 @@ fun ConfigureScreen(
         onStarted()
     }
     val permLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-        val ok = !local || result[hotspotPermission] == true ||
+        val ok = system || result[hotspotPermission] == true ||
             ContextCompat.checkSelfPermission(context, hotspotPermission) == PackageManager.PERMISSION_GRANTED
         if (ok) begin() else scope.launch {
             snackbar.showSnackbar(
@@ -124,7 +135,7 @@ fun ConfigureScreen(
     }
     fun requestAndStart() {
         val wanted = buildList {
-            if (local) add(hotspotPermission)
+            if (!system) add(hotspotPermission)
             if (Build.VERSION.SDK_INT >= 33) add(Manifest.permission.POST_NOTIFICATIONS)
         }.filter { ContextCompat.checkSelfPermission(context, it) != PackageManager.PERMISSION_GRANTED }
         if (wanted.isEmpty()) begin() else permLauncher.launch(wanted.toTypedArray())
@@ -137,7 +148,11 @@ fun ConfigureScreen(
                 Column(Modifier.fillMaxWidth().navigationBarsPadding().padding(16.dp)) {
                     Button(onClick = ::requestAndStart, enabled = canStart, modifier = Modifier.fillMaxWidth().height(52.dp)) {
                         Text(
-                            if (local) "🚀 Start Hotspot" else "🚀 Start: open hotspot settings",
+                            when {
+                                system -> "🚀 Start: open hotspot settings"
+                                quick -> "🚀 Start quick hotspot"
+                                else -> "🚀 Start Hotspot"
+                            },
                             fontWeight = FontWeight.Bold, fontSize = 17.sp,
                         )
                     }
@@ -150,32 +165,35 @@ fun ConfigureScreen(
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             SectionCard("Hotspot mode") {
-                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                    SegmentedButton(
-                        selected = local, onClick = { vm.edit { it.copy(mode = HotspotMode.LOCAL_ONLY) } },
-                        shape = SegmentedButtonDefaults.itemShape(0, 2),
-                    ) { Text("No internet") }
-                    SegmentedButton(
-                        selected = !local, onClick = { vm.edit { it.copy(mode = HotspotMode.SYSTEM_HOTSPOT) } },
-                        shape = SegmentedButtonDefaults.itemShape(1, 2),
-                    ) { Text("Share internet") }
+                ModeOption(
+                    "🎭", "Funny name",
+                    if (vm.directSupported) "Your name and password. No internet." else "Needs Android 10+ with Wi-Fi Direct",
+                    selected = direct, enabled = vm.directSupported,
+                ) { vm.setMode(HotspotMode.WIFI_DIRECT) }
+                ModeOption("🌐", "Share internet", "Any name, open or with a password. You switch it on in Settings.", system) {
+                    vm.setMode(HotspotMode.SYSTEM_HOTSPOT)
                 }
-                Spacer(Modifier.height(10.dp))
+                ModeOption("⚡", "Quick", "One tap, no internet. Android picks the name and password.", quick) {
+                    vm.setMode(HotspotMode.LOCAL_ONLY)
+                }
+                Spacer(Modifier.height(8.dp))
                 when {
-                    local && Capabilities.canCustomizeLocalOnly -> InfoNote(
-                        "Guests join a private network with just your phone and the prank page. No mobile data is shared.", "📡",
+                    direct -> InfoNote(
+                        "Guests see “${DirectName.full(cfg.ssid.ifBlank { "Your name" })}” in their Wi-Fi list. " +
+                            "Android makes app-created networks start with DIRECT-xy and always use a password.",
+                        "📡",
                     )
-                    local -> InfoNote(
-                        "On ${Capabilities.androidLabel}, Android picks the hotspot's name and password itself " +
-                            "(custom names need Android 16 QPR2). You'll see them, with a join QR code, once it starts. " +
-                            "Want your funny name? Choose Share internet and type it into your phone's hotspot settings.",
-                        "ℹ️",
+                    system -> InfoNote(
+                        "Android doesn't let apps switch on internet sharing or name a hotspot. Tap Start: Settings opens. " +
+                            "Set the hotspot name and password to the ones below" +
+                            (if (cfg.security == Security.OPEN) ", set Security to None" else "") +
+                            ", turn it on, then come back. PrankSpot serves the prank page as soon as it spots the hotspot.",
+                        "🌐",
                     )
                     else -> InfoNote(
-                        "Android doesn't let apps switch on internet sharing. Tap Start: Settings opens. " +
-                            "Set your phone's hotspot name and password to the ones below, turn it on, then come back. " +
-                            "PrankSpot serves the prank page as soon as it spots the hotspot.",
-                        "🌐",
+                        "Android names this hotspot itself (like AndroidShare_1234) and picks the password; apps aren't " +
+                            "allowed to change either. You'll get a join QR code once it starts.",
+                        "ℹ️",
                     )
                 }
             }
@@ -192,22 +210,24 @@ fun ConfigureScreen(
             if (nameEditable) {
                 SectionCard("Network name") {
                     val isFav = favorites.any { it.ssid == cfg.ssid }
+                    val limit = if (direct) DirectName.MAX_NAME_BYTES else SsidRules.MAX_BYTES
                     OutlinedTextField(
                         value = cfg.ssid,
                         onValueChange = { v -> vm.edit { it.copy(ssid = v) } },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         isError = ssidError != null,
+                        prefix = if (direct) { { Text("DIRECT-${DirectName.tag(cfg.ssid)} ", color = MaterialTheme.colorScheme.outline) } } else null,
                         supportingText = {
                             val bytes = cfg.ssid.toByteArray(Charsets.UTF_8).size
                             Text(
-                                ssidError ?: if (SsidRules.hasCompatibilityRisk(cfg.ssid)) "Emoji/accents may look odd on some phones · $bytes/32"
-                                else "$bytes/32 bytes",
+                                ssidError ?: if (SsidRules.hasCompatibilityRisk(cfg.ssid)) "Emoji/accents may look odd on some phones · $bytes/$limit"
+                                else "$bytes/$limit bytes",
                             )
                         },
                         trailingIcon = {
                             Row {
-                                if (!local) IconButton(onClick = { clipboard.setText(AnnotatedString(cfg.ssid)) }) {
+                                if (system) IconButton(onClick = { clipboard.setText(AnnotatedString(cfg.ssid)) }) {
                                     Icon(Icons.Default.ContentCopy, "Copy name")
                                 }
                                 IconButton(onClick = { vm.toggleFavoriteSsid(cfg.ssid) }, enabled = ssidError == null) {
@@ -223,7 +243,7 @@ fun ConfigureScreen(
                         }
                         AssistChip(onClick = vm::regenerate, label = { Text("More names") }, leadingIcon = { Icon(Icons.Default.Refresh, null) })
                     }
-                    val favs = favorites.filter { it.categoryId == cfg.categoryId }
+                    val favs = favorites.filter { it.categoryId == cfg.categoryId && (!direct || DirectName.fits(it.ssid)) }
                     if (favs.isNotEmpty()) {
                         Spacer(Modifier.height(6.dp))
                         Text("⭐ Favorites", style = MaterialTheme.typography.labelMedium)
@@ -236,15 +256,22 @@ fun ConfigureScreen(
                 }
 
                 SectionCard("Security") {
-                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
-                        SegmentedButton(
-                            selected = cfg.security == Security.WPA2, onClick = { vm.edit { it.copy(security = Security.WPA2) } },
-                            shape = SegmentedButtonDefaults.itemShape(0, 2),
-                        ) { Text("Password") }
-                        SegmentedButton(
-                            selected = cfg.security == Security.OPEN, onClick = { vm.edit { it.copy(security = Security.OPEN) } },
-                            shape = SegmentedButtonDefaults.itemShape(1, 2),
-                        ) { Text("Open") }
+                    if (system) {
+                        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+                            SegmentedButton(
+                                selected = cfg.security == Security.WPA2, onClick = { vm.edit { it.copy(security = Security.WPA2) } },
+                                shape = SegmentedButtonDefaults.itemShape(0, 2),
+                            ) { Text("Password") }
+                            SegmentedButton(
+                                selected = cfg.security == Security.OPEN, onClick = { vm.edit { it.copy(security = Security.OPEN) } },
+                                shape = SegmentedButtonDefaults.itemShape(1, 2),
+                            ) { Text("Open (no password)") }
+                        }
+                    } else {
+                        Text(
+                            "Wi-Fi Direct networks always need a password. For an open network, use Share internet.",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
                     }
                     if (cfg.security == Security.WPA2) {
                         Spacer(Modifier.height(10.dp))
@@ -263,7 +290,7 @@ fun ConfigureScreen(
                                     IconButton(onClick = { showPass = !showPass }) {
                                         Icon(if (showPass) Icons.Default.VisibilityOff else Icons.Default.Visibility, "Show password")
                                     }
-                                    if (!local) IconButton(onClick = { clipboard.setText(AnnotatedString(cfg.password)) }) {
+                                    if (system) IconButton(onClick = { clipboard.setText(AnnotatedString(cfg.password)) }) {
                                         Icon(Icons.Default.ContentCopy, "Copy password")
                                     }
                                     IconButton(onClick = vm::generatePassword) { Icon(Icons.Default.Casino, "Generate password") }
@@ -273,7 +300,7 @@ fun ConfigureScreen(
                     } else {
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            "Anyone nearby can join. Some phones refuse open hotspots; if it fails, switch back to Password.",
+                            "Anyone nearby can join. In your phone's hotspot settings, set Security to None.",
                             style = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -348,6 +375,36 @@ fun ConfigureScreen(
                 )
             }
             Spacer(Modifier.height(8.dp))
+        }
+    }
+}
+
+
+@Composable
+private fun ModeOption(
+    emoji: String,
+    title: String,
+    subtitle: String,
+    selected: Boolean,
+    enabled: Boolean = true,
+    onClick: () -> Unit,
+) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.small)
+            .background(if (selected) MaterialTheme.colorScheme.secondaryContainer else androidx.compose.ui.graphics.Color.Transparent)
+            .selectable(selected = selected, enabled = enabled, role = Role.RadioButton, onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        RadioButton(selected = selected, onClick = null, enabled = enabled)
+        Spacer(Modifier.width(8.dp))
+        Text(emoji, fontSize = 22.sp)
+        Spacer(Modifier.width(10.dp))
+        Column(Modifier.weight(1f)) {
+            Text(title, fontWeight = FontWeight.Bold, color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.outline)
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }

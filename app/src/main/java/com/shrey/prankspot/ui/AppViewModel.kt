@@ -8,6 +8,7 @@ import com.shrey.prankspot.data.AppSettings
 import com.shrey.prankspot.data.FavoritePrank
 import com.shrey.prankspot.data.FavoriteSsid
 import com.shrey.prankspot.domain.Category
+import com.shrey.prankspot.domain.DirectName
 import com.shrey.prankspot.domain.HotspotConfig
 import com.shrey.prankspot.domain.HotspotMode
 import com.shrey.prankspot.domain.PasswordGenerator
@@ -15,6 +16,7 @@ import com.shrey.prankspot.domain.PrankTemplate
 import com.shrey.prankspot.domain.Security
 import com.shrey.prankspot.domain.SsidGenerator
 import com.shrey.prankspot.hotspot.SystemHotspotManager
+import com.shrey.prankspot.hotspot.WifiDirectHotspotManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -30,6 +32,9 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private val dao = c.database.dao()
     private val ssidGen = SsidGenerator()
     private val passGen = PasswordGenerator()
+
+    /** Wi-Fi Direct needs Android 10+ and the hardware feature; otherwise fall back. */
+    val directSupported = WifiDirectHotspotManager.isSupported(app)
 
     val categories: List<Category> = c.catalog.categories
     val pranks: List<PrankTemplate> = c.catalog.pranks
@@ -54,7 +59,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val s = c.settings.settings.first()
             _draft.value = HotspotConfig(
-                mode = s.defaultMode,
+                mode = if (s.defaultMode == HotspotMode.WIFI_DIRECT && !directSupported) HotspotMode.SYSTEM_HOTSPOT else s.defaultMode,
                 durationMinutes = if (s.autoShutdown) s.defaultDurationMinutes else 0,
                 randomPrank = s.randomPrank,
                 password = passGen.generate(),
@@ -71,7 +76,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     fun selectCategory(id: String, prankId: String = "") {
         val cat = c.catalog.category(id)
-        val picks = ssidGen.suggestions(cat)
+        val picks = ssidGen.suggestions(cat, fits = fitsFor(_draft.value.mode))
         _suggestions.value = picks
         _draft.update {
             it.copy(
@@ -83,9 +88,29 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun regenerate() {
-        val picks = ssidGen.suggestions(c.catalog.category(_draft.value.categoryId))
+        val picks = ssidGen.suggestions(c.catalog.category(_draft.value.categoryId), fits = fitsFor(_draft.value.mode))
         _suggestions.value = picks
         _draft.update { it.copy(ssid = picks.first()) }
+    }
+
+    /** Wi-Fi Direct names lose 10 bytes to the "DIRECT-xy " prefix, so suggest only names that fit. */
+    private fun fitsFor(mode: HotspotMode): (String) -> Boolean =
+        if (mode == HotspotMode.WIFI_DIRECT) DirectName::fits else { _ -> true }
+
+    fun setMode(mode: HotspotMode) {
+        _draft.update {
+            it.copy(
+                mode = mode,
+                // Wi-Fi Direct and the local-only hotspot always need a password.
+                security = if (mode == HotspotMode.SYSTEM_HOTSPOT) it.security else Security.WPA2,
+                password = it.password.ifBlank { passGen.generate() },
+            )
+        }
+        val ssid = _draft.value.ssid
+        if (!fitsFor(mode)(ssid)) regenerate()
+        else _suggestions.value = _suggestions.value.filter(fitsFor(mode)).ifEmpty {
+            ssidGen.suggestions(c.catalog.category(_draft.value.categoryId), fits = fitsFor(mode))
+        }
     }
 
     fun edit(transform: (HotspotConfig) -> HotspotConfig) = _draft.update(transform)

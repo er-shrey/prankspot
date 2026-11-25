@@ -18,10 +18,11 @@ An offline Android app for creating funny Wi-Fi hotspots and serving a harmless 
 
 - **17 themes** (Aeroplane, Birthday, Carnival, Concert, Wedding, Gaming, Police / FBI, Hacker, School, Office, Hospital, Restaurant, Hotel, Christmas, Halloween, Alien Invasion, Custom), each with 20+ funny network names and its own prank page.
 - **Name generator** that doesn't repeat itself, plus manual editing, favorites, and 32-byte / emoji checks.
-- **Easy-to-say passwords** like `WobblyPickle47`, or an open network.
-- **Two hotspot modes**
-  - *No internet*: a local-only hotspot started by the app (`WifiManager.startLocalOnlyHotspot`).
-  - *Share internet*: Android doesn't let apps switch on tethering, so PrankSpot opens hotspot settings, waits until it sees your hotspot, then serves the prank page on it.
+- **Easy-to-say passwords** like `WobblyPickle47`.
+- **Three hotspot modes**
+  - 🎭 *Funny name* (default, Android 10+): a Wi-Fi Direct group with your name and password, no internet. Guests see e.g. `DIRECT-FS FBI Surveillance Van`; Android requires the `DIRECT-xy` prefix and a password for networks an app creates.
+  - 🌐 *Share internet*: your phone's own hotspot. Android doesn't let apps switch it on or name it, so PrankSpot opens hotspot settings with the name and password ready to copy (or Security: None for an open network), waits until it sees the hotspot, then serves the prank page on it.
+  - ⚡ *Quick*: a local-only hotspot in one tap; Android picks the name (`AndroidShare_1234`) and password.
 - **Local prank page server** (embedded Ktor). It binds only to the hotspot's own address, answers GET only, and redirects captive-portal probes and every other path to the prank.
 - **QR codes** for joining the Wi-Fi and for opening the prank page, with copy buttons.
 - **Session timer** with auto shutdown, +15 min, a foreground notification with a Stop button, and a short history.
@@ -30,7 +31,8 @@ An offline Android app for creating funny Wi-Fi hotspots and serving a harmless 
 
 ## Honest limits
 
-- **Custom hotspot names:** Android lets apps name a local-only hotspot only from Android 16 QPR2 (API 36.1), through `startLocalOnlyHotspotWithConfiguration`. On the API 37 emulator the system still replaced the name with `AndroidShare_XXXX`. PrankSpot reads back the real name and password and shows those, with a note. On older phones, use *Share internet* mode and type the funny name into your hotspot settings.
+- **Hotspot names:** apps can't name a regular hotspot. For `startLocalOnlyHotspotWithConfiguration`, only the channel setting is public API; the name and password setters are system-only, so Android replaces them with `AndroidShare_XXXX`. That's why the funny-name mode uses Wi-Fi Direct (name must start with `DIRECT-xy`, at most 22 bytes after it, password required).
+- **Open networks** can only be made from your phone's hotspot settings (*Share internet* mode, Security: None).
 - **Automatic captive-portal pop-ups** need control of DHCP and DNS, which normal apps don't have. Guests open the page by QR code or address. If a device happens to probe the server directly, the probe is redirected to the prank.
 - **Who joined** isn't visible to apps, so the guest list counts devices that opened the page.
 - **Maximum devices** and **blocking** need system-only APIs, so they aren't offered.

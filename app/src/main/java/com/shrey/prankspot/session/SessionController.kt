@@ -17,6 +17,7 @@ import com.shrey.prankspot.hotspot.HotspotInterfaces
 import com.shrey.prankspot.hotspot.HotspotStatus
 import com.shrey.prankspot.hotspot.LocalOnlyHotspotManager
 import com.shrey.prankspot.hotspot.SystemHotspotManager
+import com.shrey.prankspot.hotspot.WifiDirectHotspotManager
 import com.shrey.prankspot.portal.PageRenderer
 import com.shrey.prankspot.portal.PortalServer
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,7 @@ class SessionController(
     private val settings: SettingsRepository,
     val localOnly: LocalOnlyHotspotManager,
     val system: SystemHotspotManager,
+    val direct: WifiDirectHotspotManager,
 ) {
     private val scope = CoroutineScope(Dispatchers.Main.immediate + kotlinx.coroutines.SupervisorJob())
     private val _state = MutableStateFlow(SessionState())
@@ -81,7 +83,11 @@ class SessionController(
         )
         ContextCompat.startForegroundService(context, HotspotService.startIntent(context))
         sessionJob = scope.launch {
-            val manager = if (config.mode == HotspotMode.LOCAL_ONLY) localOnly else system
+            val manager = when (config.mode) {
+                HotspotMode.WIFI_DIRECT -> direct
+                HotspotMode.SYSTEM_HOTSPOT -> system
+                HotspotMode.LOCAL_ONLY -> localOnly
+            }
             when (val r = manager.start(config)) {
                 is HotspotResult.Failed -> fail(r.reason)
                 is HotspotResult.Started -> onHotspotUp(config, r.info)
@@ -94,16 +100,16 @@ class SessionController(
         val ends = if (config.durationMinutes > 0) now + config.durationMinutes * 60_000L else 0L
         _state.update { it.copy(phase = Phase.RUNNING, info = info, startedAt = now, endsAt = ends, error = null) }
         HotspotService.refresh(context)
-        if (config.portalEnabled) startPortal()
+        if (config.portalEnabled) startPortal(config.mode == HotspotMode.WIFI_DIRECT)
         watch(config)
     }
 
     /** The hotspot interface can take a moment to get its address after the OS reports it up. */
-    private suspend fun startPortal() {
+    private suspend fun startPortal(wifiDirect: Boolean) {
         val upstream = SystemHotspotManager.upstreamInterfaces(context)
         var found: HotspotInterfaces.Candidate? = null
         for (attempt in 0 until 20) {
-            found = withContext(Dispatchers.IO) { HotspotInterfaces.find(upstream) }
+            found = withContext(Dispatchers.IO) { HotspotInterfaces.find(upstream, wifiDirect) }
             if (found != null) break
             delay(500)
         }
@@ -128,7 +134,7 @@ class SessionController(
         scope.launch {
             withContext(Dispatchers.IO) { server.stop() }
             _state.update { it.copy(portalUrl = null, portalError = null) }
-            startPortal()
+            startPortal(_state.value.config?.mode == HotspotMode.WIFI_DIRECT)
         }
     }
 
@@ -145,12 +151,13 @@ class SessionController(
                 val up = when (config.mode) {
                     HotspotMode.LOCAL_ONLY -> localOnly.observeStatus().value is HotspotStatus.Running
                     HotspotMode.SYSTEM_HOTSPOT -> withContext(Dispatchers.IO) { system.isHotspotUp() }
+                    HotspotMode.WIFI_DIRECT -> direct.group()?.isGroupOwner == true
                 }
                 if (!up) {
                     stop(reason = "The hotspot was turned off")
                     return@launch
                 }
-                delay(if (config.mode == HotspotMode.SYSTEM_HOTSPOT) 3_000 else 1_000)
+                delay(if (config.mode == HotspotMode.LOCAL_ONLY) 1_000 else 3_000)
             }
         }
     }
@@ -172,7 +179,11 @@ class SessionController(
         sessionJob?.cancel()
         scope.launch {
             withContext(Dispatchers.IO) { server.stop() }
-            if (s.config?.mode == HotspotMode.SYSTEM_HOTSPOT) system.markStopped() else localOnly.stop()
+            when (s.config?.mode) {
+                HotspotMode.SYSTEM_HOTSPOT -> system.markStopped()
+                HotspotMode.WIFI_DIRECT -> direct.stop()
+                else -> localOnly.stop()
+            }
             if (s.phase == Phase.RUNNING && s.config != null) {
                 withContext(Dispatchers.IO) {
                     dao.addSession(

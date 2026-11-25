@@ -27,13 +27,20 @@ data class PrankTemplate(
     val sound: String,
 )
 
-enum class HotspotMode { LOCAL_ONLY, SYSTEM_HOTSPOT }
+enum class HotspotMode {
+    /** Wi-Fi Direct group: the app's own name (after a DIRECT-xy prefix) and password, no internet. */
+    WIFI_DIRECT,
+    /** The phone's own hotspot, switched on by the user in Settings: any name, open or not, internet. */
+    SYSTEM_HOTSPOT,
+    /** Local-only hotspot: one tap, but Android picks the name and password. */
+    LOCAL_ONLY,
+}
 
 enum class Security { OPEN, WPA2 }
 
 /** What the user asked for. The OS may not honour every field (see [HotspotInfo.customApplied]). */
 data class HotspotConfig(
-    val mode: HotspotMode = HotspotMode.LOCAL_ONLY,
+    val mode: HotspotMode = HotspotMode.WIFI_DIRECT,
     val categoryId: String = "custom",
     val ssid: String = "",
     val password: String = "",
