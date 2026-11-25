@@ -4,7 +4,7 @@ An offline Android app for creating funny Wi-Fi hotspots and serving a harmless 
 
 **Create a funny network. Let someone connect. Surprise them with a hilarious page.**
 
-**[Download PrankSpot 0.1.0 (APK)](https://github.com/er-shrey/prankspot/releases/download/v0.1.0/PrankSpot-0.1.0.apk)** · Android 8.0+
+**[Download PrankSpot 0.2.0 (APK)](https://github.com/er-shrey/prankspot/releases/download/v0.2.0/PrankSpot-0.2.0.apk)** · Android 8.0+
 
 | Home | Pick a theme | Set up | Live |
 |---|---|---|---|
